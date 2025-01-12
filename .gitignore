@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+.env
+*.egg-info/
+dist/
+build/
+env/
+
+# Projektspezifisch
+src/model.pth
+*.pth
+*.tar
+*.csv
+models/
+datasets/
+results/
+output/
+data/
+
