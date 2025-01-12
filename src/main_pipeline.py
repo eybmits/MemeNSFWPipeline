@@ -28,18 +28,25 @@ def run_command(command, description):
 def get_tar_contents(tar_path):
     """
     Liest alle Dateinamen aus einem TAR-Archiv.
+    Nutzt die Optionen --no-same-owner und --no-same-permissions,
+    damit restriktive Berechtigungen im Tar-Archiv nicht verhindern,
+    dass die Bilddateien gelesen werden können.
     """
     try:
+        # WICHTIGER TEIL: --no-same-owner und --no-same-permissions
         result = subprocess.run(
-            ['tar', '-tf', tar_path],
+            ['tar', '--no-same-owner', '--no-same-permissions', '-tf', tar_path],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True
         )
         # Filtere nur Bilddateien
-        files = [os.path.basename(f.strip()) for f in result.stdout.split('\n') if 
-                f.strip().lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp'))]
+        files = [
+            os.path.basename(f.strip()) 
+            for f in result.stdout.split('\n') 
+            if f.strip().lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp'))
+        ]
         return files
     except subprocess.CalledProcessError as e:
         logger.error(f"Fehler beim Lesen des TAR-Archivs: {e.stderr}")
@@ -80,7 +87,7 @@ def merge_results(ocr_csv, prediction_csv, nsfw_csv, output_path, all_images):
     # DataFrame für alle Bilder erstellen
     all_images_df = pd.DataFrame({'image_path': all_images})
     
-    # DataFrames zusammenführen
+    # DataFrames zusammenführen (Left Join, damit alle Bilder auftauchen)
     merged_df = pd.merge(
         all_images_df,
         ocr_df,
@@ -152,7 +159,7 @@ def process_single_tar(images_tar, model_path, output_dir):
     os.makedirs(nsfw_output_dir, exist_ok=True)
 
     try:
-        # Liste aller Bilder im TAR erhalten
+        # Liste aller Bilder im TAR erhalten (mit Fix für Berechtigungen)
         all_images = get_tar_contents(images_tar)
         logger.info(f"Gefundene Bilder im TAR: {len(all_images)}")
 

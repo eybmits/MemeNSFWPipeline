@@ -246,8 +246,18 @@ def extract_tar(tar_path, extract_path):
     if not tarfile.is_tarfile(tar_path):
         raise ValueError(f"Die Datei {tar_path} ist kein gültiges TAR-Archiv.")
     with tarfile.open(tar_path, 'r') as tar:
-        tar.extractall(path=extract_path)
+        for member in tar.getmembers():
+            # Versuchen, die Datei mit geänderten Berechtigungen zu extrahieren
+            member.mode = 0o777  # Vollzugriff
+            try:
+                tar.extract(member, path=extract_path)
+                extracted_file_path = os.path.join(extract_path, member.name)
+                if os.path.exists(extracted_file_path):
+                    os.chmod(extracted_file_path, 0o777)
+            except PermissionError as e:
+                print(f"Berechtigungsproblem bei {member.name}: {e}")
     print(f"Extrahiert {tar_path} nach {extract_path}")
+
 
 def find_csv_file(directory):
     for root, _, files in os.walk(directory):

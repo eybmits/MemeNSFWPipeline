@@ -15,7 +15,8 @@ logger = logging.getLogger(__name__)
 
 def load_image_from_tar(tar_path, image_path):
     """
-    Lädt ein Bild aus einer TAR-Datei.
+    Lädt ein Bild aus einer TAR-Datei und stellt sicher, dass die Berechtigungen der extrahierten Datei 
+    angepasst werden.
     """
     with tarfile.open(tar_path, 'r') as tar:
         try:
@@ -40,12 +41,20 @@ def load_image_from_tar(tar_path, image_path):
             if img_file is None:
                 raise ValueError(f"Bild konnte nicht extrahiert werden: {target_basename}")
                 
+            extracted_path = os.path.join(os.path.dirname(image_path), matching_member.name)
+            
+            # Berechtigungen anpassen, falls extrahiert
+            if os.path.isfile(extracted_path):
+                os.chmod(extracted_path, 0o666)
+                logger.info(f"Berechtigungen aktualisiert: {extracted_path}")
+            
             img_data = img_file.read()
             return Image.open(io.BytesIO(img_data))
             
         except Exception as e:
             logger.error(f"Fehler beim Laden von {image_path}: {str(e)}")
             return None
+
 
 def process_images(csv_file, images_tar, save_folder):
     """

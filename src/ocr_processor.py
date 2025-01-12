@@ -24,7 +24,7 @@ def setup_temp_dir() -> str:
     return temp_dir
 
 def extract_tar(tar_path: str, extract_path: str) -> List[str]:
-    """Extrahiert das TAR-Archiv und gibt eine Liste der Bildpfade zurück."""
+    """Extrahiert das TAR-Archiv und passt Berechtigungen der extrahierten Dateien an."""
     image_extensions = {'.png', '.jpg', '.jpeg', '.tiff', '.bmp'}
     image_files = []
     
@@ -33,10 +33,17 @@ def extract_tar(tar_path: str, extract_path: str) -> List[str]:
             if Path(member.name).suffix.lower() in image_extensions:
                 tar.extract(member, extract_path)
                 extracted_path = os.path.join(extract_path, member.name)
+                
+                # Berechtigungen anpassen, um Lesbarkeit/Schreibbarkeit sicherzustellen
+                if os.path.isfile(extracted_path):
+                    os.chmod(extracted_path, 0o666)
+                    logger.info(f"Berechtigungen aktualisiert: {extracted_path}")
+                
                 image_files.append(extracted_path)
     
     logger.info(f"{len(image_files)} Bilddateien gefunden und extrahiert.")
     return image_files
+
 
 def process_image(args: Tuple[str, str]) -> Tuple[str, str, str]:
     """
