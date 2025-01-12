@@ -1,30 +1,38 @@
 # Image Analysis Pipeline
 
-Python-Pipeline zur Analyse von Bildern in TAR-Archiven (OCR, Meme-Erkennung, NSFW-Erkennung).
+Python pipeline for analyzing images in TAR archives:
+- OCR text extraction
+- Meme detection
+- NSFW content detection
 
 ## Installation
 
 ```bash
-pip install pandas numpy pillow torch torchvision
+pip install -r requirements.txt
 ```
 
-## Ausführung
+## Usage
 
+Basic usage:
 ```bash
-python main.py --input_dir INPUT_FOLDER --model_path MODELL_PFAD --output_dir OUTPUT_FOLDER
+python main_pipeline.py --input_dir INPUT_DIRECTORY --model_path MODEL_PATH --output_dir OUTPUT_DIRECTORY
 ```
 
-### Beispiel
+Example:
 ```bash
-python main.py --input_dir ./input_folder --model_path ./model/model.pth --output_dir ./results
+python main_pipeline.py \
+    --input_dir /path/to/your/tar/files \
+    --model_path /path/to/model.pth \
+    --output_dir /path/to/results
 ```
 
-## Ausgabe
+### Parameters
 
-Für jedes TAR-Archiv wird eine CSV-Datei mit folgenden Informationen erstellt:
-- Bildname
-- Extrahierter Text
-- Meme-Wahrscheinlichkeit
-- NSFW-Wahrscheinlichkeit
+- `--input_dir`: Directory containing TAR archives to process
+- `--model_path`: Path to the model file (model.pth)
+- `--output_dir`: Directory for output files
 
-Die Ergebnisse finden Sie in: `output_dir/archiv_name_results.csv`
+## Model
+
+The model file (model.pth) needs to be downloaded separately due to file size limitations.
+[Insert model download link here]
