@@ -13,13 +13,19 @@ pip install -r requirements.txt
 
 ## Usage
 
-Basic usage:
+Important: The pipeline must be run from the src directory!
+
 ```bash
+# First, change to the src directory
+cd path/to/project/src
+
+# Then run the pipeline
 python main_pipeline.py --input_dir INPUT_DIRECTORY --model_path MODEL_PATH --output_dir OUTPUT_DIRECTORY
 ```
 
 Example:
 ```bash
+cd /path/to/project/src && \
 python main_pipeline.py \
     --input_dir /path/to/your/tar/files \
     --model_path /path/to/model.pth \
