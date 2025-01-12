@@ -106,7 +106,7 @@ def process_images(csv_file, images_tar, save_folder):
             results.append({
                 'image_path': os.path.basename(image_path),
                 'nsfw_probability': nsfw_score,
-                'is_nsfw': is_nsfw
+                'is_nsfw': not is_nsfw
             })
             
             logger.debug(f"NSFW Score für {image_path}: {nsfw_score} (NSFW: {is_nsfw})")
