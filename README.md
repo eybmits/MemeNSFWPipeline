@@ -11,12 +11,12 @@ pip install pandas numpy pillow torch torchvision
 ## Ausführung
 
 ```bash
-python main.py --input_dir EINGABE_VERZEICHNIS --model_path MODELL_PFAD --output_dir AUSGABE_VERZEICHNIS
+python main.py --input_dir INPUT_FOLDER --model_path MODELL_PFAD --output_dir OUTPUT_FOLDER
 ```
 
 ### Beispiel
 ```bash
-python main.py --input_dir ./input_images --model_path ./model/model.pth --output_dir ./results
+python main.py --input_dir ./input_folder --model_path ./model/model.pth --output_dir ./results
 ```
 
 ## Ausgabe
